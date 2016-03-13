@@ -1,0 +1,31 @@
+{
+  "name": "hackvictoria",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/server.js",
+  "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChrisHampu/HackVictoria.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChrisHampu/HackVictoria/issues"
+  },
+  "homepage": "https://github.com/ChrisHampu/HackVictoria#readme",
+  "dependencies": {
+    "express": "",
+    "gulp": "",
+    "babel": "",
+    "babel-cli": "",
+    "babel-core": "",
+    "babel-runtime": "",
+    "gulp-babel": "",
+    "babel-plugin-transform-react-jsx": "",
+    "express-babelify-middleware": "",
+    "babel-preset-es2015": ""
+  }
+}
