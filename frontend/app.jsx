@@ -1,3 +1,17 @@
+google.maps.LatLng.prototype.distanceFrom = function(latlng) {
+  var lat = [this.lat(), latlng.lat]
+  var lng = [this.lng(), latlng.lng]
+  var R = 6378137;
+  var dLat = (lat[1]-lat[0]) * Math.PI / 180;
+  var dLng = (lng[1]-lng[0]) * Math.PI / 180;
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+  Math.cos(lat[0] * Math.PI / 180 ) * Math.cos(lat[1] * Math.PI / 180 ) *
+  Math.sin(dLng/2) * Math.sin(dLng/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c;
+  return Math.round(d);
+}
+
 var Restaurants = [
     {
         name: "Original Joes",
@@ -43,11 +57,55 @@ var Restaurants = [
         budget: 14
     },
     {
-        name: "Sun Wah Chinese Restaurant",
-        location:"1515 Cook St, Victoria, BC V8T 5E5",
-        type: ["asian", "chinese"],
+        name: "McRae's Restaurant Ltd",
+        location: "1652 McRae Ave, Victoria, BC V8P 1H3",
+        type: ["western"],
+        budget: 14,
+        phone: "(250) 590-6944"
+    },
+    {
+        name: "the DOCKS",
+        location: "1208 Wharf St, Victoria, BC V8W 1T9",
+        type: ["western"],
+        budget: 25
+    },
+    {
+        name: "Earls Kitchen + Bar",
+        location: "The Bay Centre, 1199 Government St, Victoria, BC V8W 3M9",
+        type: ["western"],
+        budget: 25
+    },
+    {
+        name: "10 Acres Bistro",
+        location: "611 Courtney St, Victoria, BC V8W 1W8",
+        type: ["western"],
+        budget: 15
+    },
+    {
+        name: "Ocean Island Café Lounge",
+        location: "791 Pandora Ave, Victoria, BC V8W 1P6",
+        type: ["western"],
+        budget: 12,
+        phone: "(250) 385-1788"
+    },
+    {
+        name: "Marina Restaurant",
+        location: "1327 Beach Dr, Victoria, BC V8S 2N4",
+        type: ["western"],
+        budget: 14,
+        phone: "(250) 598-8555"
+    },
+    {
+        name: "",
+        location: "",
+        type: ["asian"],
         budget: 14
-
+    },
+    {
+        name: "",
+        location: "",
+        type: ["asian"],
+        budget: 14
     }
 ];
 
@@ -198,8 +256,8 @@ var GameData = [
 // Games at peacocks billiards
 var Expected_food_input = ["chinese", "indian", "asian", "thai", "japanese", 
                             "western", "italian", "greek", "malaysian"]
-                            
-var Expected_budget_input = ['$5', '$10', '$15', '$20', '$25'];                           
+
+var Expected_budget_input = ['$10', '$15', '$20', '$25'];                           
 
 var Expected_context_input = ['eat', 'play', 'sing', 'drink', 'watch'];
 
@@ -226,29 +284,142 @@ var If = React.createClass({
 
 
 var Result = React.createClass({
+    getInitialState: function() {
+        return {
+            expanded: false,
+            sent: false,
+            error: undefined,
+            distance: undefined
+        }  
+    },
+    componentDidMount: function() {
+        
+        this.marker = undefined;
+        this.infoWindow = new google.maps.InfoWindow();
+        
+        if(typeof this.props.data.location === "array" || typeof this.props.data.location === "object") {
+            
+            for(var x = 0; x < this.props.data.location.length; x++) {
+                this.addGeocodedMarker(this.props.data.location[x], this.props.data.name);
+            }
+        }
+        else
+            this.addGeocodedMarker(this.props.data.location, this.props.data.name);
+    },
+    addGeocodedMarker: function(address, name) {
+      
+      var geocoder = new google.maps.Geocoder();
+      var that = this;
+      
+        geocoder.geocode({'address': address}, function(results, status) {
+            
+            if (status === google.maps.GeocoderStatus.OK) {
+                
+                if(that.props.position !== undefined) {
+                    that.setState({distance: results[0].geometry.location.distanceFrom({lat: that.props.position.coords.latitude, lng: that.props.position.coords.longitude})});
+                }
+                var marker = new google.maps.Marker({
+                    map: that.props.map,
+                    position: results[0].geometry.location
+                });
+                
+                marker.addListener('click', function() {
+                    that.props.map.setZoom(16);
+                    that.props.map.setCenter(marker.getPosition());
+                 });
+                 
+                 google.maps.event.addListener(marker, 'click', function() {
+                    that.infoWindow.setContent("<div><h3>" + name + "</h3></div><h4>" + address + "</h4>");
+                    that.infoWindow.open(that.props.map, marker);
+                  });
+                  
+                 that.marker = marker;
+            } else {
+                console.log(status);
+            }
+          
+        });
+  },
+  onHandleClick: function(ev) {
+      
+      if(this.marker !== undefined) {
+          
+            this.props.map.setZoom(16);
+            this.props.map.setCenter(this.marker.getPosition());
+      }
+      
+      this.setState({expanded: true});
+  },
+  onHandleEnter: function(ev) {
+      
+      if( (ev.type === "click" && ev.target === this.refs.buttoninput) || 
+            (ev.type==="keydown" && ev.target === this.refs.phoneinput && ev.keyCode === 13)) {
+                
+            var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+            
+            if(this.refs.phoneinput.value.match(phoneno) && this.refs.phoneinput.value.substr(0,3) === "250") {
+                
+                var location;
+                
+                if(typeof this.props.data.location === "array" || typeof this.props.data.location === "object") {
+                    location = this.props.data.location[0];
+                } else {
+                    location = this.props.data.location;
+                }
+                
+                $.post('http://hackvictoria-chrishampu.c9users.io:8080/phonedata', { phone: this.refs.phoneinput.value, payload: "LiveVictoria: The address for " + this.props.data.name + " is " + location });
+                
+                this.setState({sent: true});
+                
+            }
+            else
+            {
+                this.setState({error: "Enter valid 250 #"});
+            }
+        }
+       
+  },
    render: function() { 
        
        return ( 
-       
-       <div className="col-md-4">
-            <div className="result-card">
-                <div id="restaurant-name">{this.props.data.name}</div>
-                { typeof this.props.data.type === "array" || typeof this.props.data.type === "object"? 
-                    this.props.data.type.map(function(type, i) {
-                
-                        return <li key={i} id="restaurant-type" className="type-inline">{type}</li>
-     
-                    })
-                    :
-                    <div id="restaurant-type">{this.props.data.type}</div>
-                }
-                <div>{this.props.data.location}</div>
-                <If test={this.props.data.budget !== undefined}>
-                    <div>${this.props.data.budget} Budget</div>
-                </If>
-            </div>
+        <div className="result-card" onClick={this.onHandleClick}>
+            <div id="restaurant-name">{this.props.data.name}</div>
+            { typeof this.props.data.type === "array" || typeof this.props.data.type === "object"? 
+                this.props.data.type.map(function(type, i) {
+            
+                    return <li key={i} id="restaurant-type" className="type-inline">{type}</li>
+ 
+                })
+                :
+                <div id="restaurant-type">{this.props.data.type}</div>
+            }
+            <div>{this.props.data.location}</div>
+            <If test={this.props.data.phone !== undefined}>
+                <div>Phone #: {this.props.data.phone}</div>
+            </If>
+            <If test={this.props.data.budget !== undefined}>
+                <div>${this.props.data.budget} Budget</div>
+            </If>
+            <If test={this.state.distance !== undefined}>
+                <div>Distance: {this.state.distance/1000}km</div>
+            </If>
+            
+            <If test={this.state.expanded===true && this.state.sent === false}>
+                <div className="form-group">
+                    <label htmlFor="phonenumber">Enter Your 250 Phone #</label>
+                     <input ref="phoneinput" onKeyDown={this.onHandleEnter} type="text" id="phonenumber" className="form-control sms-input" placeholder="250-xxx-xxxx"/>
+                     <button ref="buttoninput" className="btn btn-default phone-button" onClick={this.onHandleEnter}>Get Info Sent To You</button>
+                     <If test={this.state.error!==undefined}>
+                        <div> {this.state.error} </div>
+                     </If>
+                </div>
+            </If>
+            <If test={this.state.sent === true}>
+                <div><b>Check your inbox!</b></div>
+            </If>
         </div>
-    )
+        
+        )
    } 
 });
 
@@ -256,12 +427,22 @@ var Result = React.createClass({
 var ResultView = React.createClass({ 
    getInitialState: function() {
      return {
-         mapHeight: undefined
+         mapHeight: undefined,
+         position: undefined
      }  
    },
-   componentDidMount: function() {
+   componentWillMount: function() {
        
-       this.infoWindow = new google.maps.InfoWindow();
+       var that = this;
+       
+        if(navigator.geolocation !== undefined) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                
+    			that.setState({position: position});
+    		});
+        }  
+   },
+   componentDidMount: function() {
        
        this.updateMapHeight(); 
        
@@ -273,19 +454,6 @@ var ResultView = React.createClass({
         var that = this;
 
         window.addEventListener('resize', this.updateMapHeight);
-        
-        for(var i = 0; i < this.props.data.length; i++) {
-            
-            if(typeof this.props.data.type === "array" || typeof this.props.data.type === "object") {
-                
-                for(var x = 0; x < this.props.data[i].location.length; x++) {
-                    this.addGeocodedMarker(this.props.data[i].location[i]);
-                }
-            }
-            else
-                this.addGeocodedMarker(this.props.data[i].location, this.props.data[i].name);
-        }
-
    },
    componentWillUnmount: function() {
        
@@ -305,53 +473,27 @@ var ResultView = React.createClass({
         
         this.setState({mapHeight: this.offsetTop});
    },
-  addGeocodedMarker: function(address, name) {
-      
-      var geocoder = new google.maps.Geocoder();
-      var that = this;
-      
-        geocoder.geocode({'address': address}, function(results, status) {
-            
-            if (status === google.maps.GeocoderStatus.OK) {
-                
-                var marker = new google.maps.Marker({
-                    map: that.map,
-                    position: results[0].geometry.location
-                });
-                
-                marker.addListener('click', function() {
-                    that.map.setZoom(16);
-                    that.map.setCenter(marker.getPosition());
-                 });
-                 
-                 google.maps.event.addListener(marker, 'click', function() {
-                    that.infoWindow.setContent("<div><h3>" + name + "</h3></div><h4>" + address + "</h4>");
-                    that.infoWindow.open(that.map, marker);
-                  });
-            } else {
-                console.log(status);
-            }
-          
-        });
-  },
    render: function() {
        
        var height = {
             height: this.state.mapHeight !== undefined ? this.offsetTop  + "px" : 0
        };
        
+       if(this.state.position !== undefined)
+            console.log(this.state.position);
+       
        return (
             <div className="result-container full-size">
                 <div className="container-fluid full-size">
                     <div className="row full-size">
-                        <div className="col-md-6">
+                        <div className="col-md-6 full-height">
                             <If test={this.props.data.length > 0}>
-                                <div className="container-fluid">
-                                    <div className="row card-container">
+                                <div className="container-fluid full-height">
+                                    <div ref="cards" style={ height } className="row card-container">
                                     
                                     { this.props.data.map(function(val, i) {
-                                        return <Result key={i} data={val}/>
-                                    }) }
+                                        return <Result key={i} data={val} map={this.map} position={this.state.position}/>
+                                    }.bind(this)) }
                                     
                                     </div>
                                 </div>
@@ -495,7 +637,7 @@ var EatContext = React.createClass({
         
         if(found) {
             
-            this.state.answers.push({text:"I'm looking for", value: nuValue});
+            this.state.answers.push({text:"I'm looking for", value: nuValue + " food"});
             this.setState({foodType: nuValue, errorMsg: undefined});
             this.props.updateSuggestions(Expected_budget_input, this.setBudget);
             

@@ -26,6 +26,8 @@
     "gulp-babel": "",
     "babel-plugin-transform-react-jsx": "",
     "express-babelify-middleware": "",
-    "babel-preset-es2015": ""
+    "babel-preset-es2015": "",
+    "twilio": "",
+    "body-parser": ""
   }
 }

@@ -132,14 +132,21 @@ html, body {
 }
 
 .result-card {
-   
-    display: block;
+     cursor: pointer;
+    display: inline-block;
     height: auto;
     font-family: 'Source Sans Pro', sans-serif;
     background: white;
     border: 1px solid black;
     border-radius: 5px;
     padding: 20px;
+    width: 30%;
+    /* float: left; */
+    /* margin: 5%; */
+    margin: 10px;
+    top: 0;
+    position: relative;
+    vertical-align: top;
 }
 
 .result-card div {
@@ -184,4 +191,35 @@ html, body {
 .type-inline {
     display: inline;
     margin-right: 6px;
+}
+
+.result-card .form-group {
+    padding: 0;
+}
+
+.phone-button {
+    margin-top: 6px;   
+}
+
+.sms-input {
+    width: 50%;
+    padding: 0px 10px;
+    display: inline;
+}
+
+label[for="phonenumber"] {
+    display: block;
+    margin-top: 5px;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.card-container {
+    overflow: auto;
+}
+
+.card-container::-webkit-scrollbar { 
+    display: none; 
 }
