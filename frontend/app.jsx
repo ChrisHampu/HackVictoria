@@ -145,8 +145,57 @@ var SingData = [
     },
 ];
 
-// Games at peacocks billiards
+var SportData = [
+    {
+        name: "Beacon Hill Tennis Courts",
+        location: "Nursery Road, Victoria, BC",
+        type: "tennis"     
+    },
+    {
+        name: "Stadacona Tennis Courts",
+        location: "Pandora Ave, Victoria, BC V8R 3Y7",
+        type: "tennis"     
+    },
+    {
+        name: "McKinnon Gym",
+        location: "Gabriola Rd, Saanich, BC V8P 3Y3",
+        type: "tennis"     
+    },
+    {
+        name: "Cedar Hill Recreation Centre",
+        location: "3220 Cedar Hill Rd, Victoria, BC V8P 3Y3",
+        type: "tennis"     
+    },
+    {
+        name: "Victoria Cougars Junior Hockey Club",
+        location: "1151 Esquimalt Rd, Victoria, BC V9A 3N6",
+        type: "hockey"     
+    },{
+        name: "Save On Foods Memorial Centre",
+        location: "1925 Blanshard St, Victoria, BC V8T 4J2",
+        type: "hockey"     
+    },
+    {
+        name: "Pearkes Recreation Centre",
+        location: "Tillicum Community School, 3100 Tillicum Rd, Victoria, BC V9A 6T2",
+        type: "skating"     
+    },
+];
 
+var GameData = [
+    {
+        name: "Interactivity Board Game Cafe",
+        location: "723 Yates St, Victoria, BC V8W 1L4",
+        type: "board games"  
+    },
+    {
+        name: "Peacock Billiards",
+        location: "1175 Douglas St, Victoria, BC V8W 2E2",
+        type: "table games"  
+    }
+];
+
+// Games at peacocks billiards
 var Expected_food_input = ["chinese", "indian", "asian", "thai", "japanese", 
                             "western", "italian", "greek", "malaysian"]
                             
@@ -261,13 +310,9 @@ var ResultView = React.createClass({
       var geocoder = new google.maps.Geocoder();
       var that = this;
       
-      console.log(address);
-      
         geocoder.geocode({'address': address}, function(results, status) {
             
             if (status === google.maps.GeocoderStatus.OK) {
-                
-                console.log(results[0].geometry.location);
                 
                 var marker = new google.maps.Marker({
                     map: that.map,
@@ -483,7 +528,6 @@ var EatContext = React.createClass({
         
         for(var i = 0; i < Restaurants.length; i++) {
             
-            console.log(typeof Restaurants[i].type);
             if(typeof Restaurants[i].type === "array" || typeof Restaurants[i].type === "object") {
                 
                 if(this.state.budget < Restaurants[i].budget)
@@ -508,8 +552,6 @@ var EatContext = React.createClass({
         }
         
         this.setState({results: res});
-        
-        
     },
     render: function() {
         return (
@@ -554,8 +596,7 @@ var PlayContext = React.createClass({
             answers: [],
             results: undefined,
             errorMsg: undefined
-        }  
-        
+        }
     },
     
     componentWillMount: function() {
@@ -657,10 +698,30 @@ var PlayContext = React.createClass({
     
     gatherData: function() {
         
+        var res = [];
+         
+        if(this.state.sportType !== undefined) {
+            for(var i = 0; i < SportData.length; i++) {
+            
+                if(this.state.sportType.toLowerCase() === SportData[i].type.toLowerCase()) {
+                        
+                    res.push(SportData[i]);
+                }
+            }
+        } else {
+            for(var i = 0; i < GameData.length; i++) {
+            
+                if(this.state.gameType.toLowerCase() === GameData[i].type.toLowerCase()) {
+                        
+                    res.push(GameData[i]);
+                }
+            }
+        }
+        
+        this.setState({results: res});
+        
     },
     render: function() {
-        
-        console.log(this.state.answers);
         
         return (            
             <div className="full-size">
@@ -675,17 +736,16 @@ var PlayContext = React.createClass({
             <If test={this.state.playType===undefined}>
                 { this.state.playType === undefined ?
                     <SearchPrompt promptType="What do you want to play?" promptFunctor={this.setPlayType}/>
-                    : (this.state.gameType !== undefined ? 
-                    <SearchPrompt promptType="What games do you like?" promptFunctor={this.setGameType}/>
-                    : <SearchPrompt promptType="What sports do you like?" promptFunctor={this.setSportType}/>)
+                    : false
                 }
             </If>
             
-            <If test={this.state.playType!==undefined}>
-                { this.state.playType === "games" ?
-                    <SearchPrompt promptType="What games do you like?" promptFunctor={this.setGameType}/>
-                    :  <SearchPrompt promptType="What sports do you like?" promptFunctor={this.setSportType}/>
-                }
+            <If test={this.state.playType==="games" && this.state.results===undefined}>
+                <SearchPrompt promptType="What games do you like?" promptFunctor={this.setGameType}/>
+            </If>
+            
+            <If test={this.state.playType==="sports" && this.state.results===undefined}>
+                <SearchPrompt promptType="What sports do you like?" promptFunctor={this.setSportType}/>
             </If>
             
             <If test={this.state.results!==undefined}>
