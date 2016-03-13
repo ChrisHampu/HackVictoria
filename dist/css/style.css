@@ -8,6 +8,7 @@ html, body {
     width: 100%;
     height: 100%;
     min-height: 100%;
+    overflow: hidden;
 }
 
 #main {
@@ -25,13 +26,10 @@ html, body {
     background: url('../img/victoria.jpg');
     background-size: cover;
     background-attachment: fixed;
-    display: table;
 }
 
 
 .inner-middle {
-    display: table-cell;
-    vertical-align: middle;
 }
 
 .horizontal-middle {
@@ -74,7 +72,6 @@ html, body {
 
 #search-wrapper{
     background: rgba(255,255,255,0.47777);
-    display: table;
 }
 
 .search-box {
@@ -120,18 +117,61 @@ html, body {
      font-size: 32px;
 }
 
-.suggestions-list {
-    
-}
 
 .suggestion-value{
     list-style-type: none;
 }
 
-.suggestion-button{
-    
+.suggestion-button {
+    padding: 8px 0;
+    width: 50%;
+    font-size: 18px;
     border: 1px solid black;
-    padding: 2px;
-    margin-right: 10px;
+    padding: 0px 10px;
     background: #EEE;
+}
+
+.card-container {
+    
+
+   
+    
+}
+
+.result-card {
+   
+    display: block;
+    height: auto;
+    font-family: 'Source Sans Pro', sans-serif;
+    background: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.result-card div {
+    padding: 3px 0;
+}
+
+#restaurant-name {
+    font-weight: bold;
+}    
+
+#restaurant-type {
+    text-transform: capitalize;
+}
+
+.sorry-Message{
+    color: red;
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.result-container {
+    margin-top: 30px;
+}
+
+.no-result{
+    font-size: 20px;
+    color: red;
 }
