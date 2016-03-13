@@ -82,7 +82,7 @@ html, body {
 
 
 #search-wrapper{
-    background: rgba(255,255,255,0.47777);
+    background: rgba(255,255,255,0.3);
 }
 
 .search-box {
@@ -126,6 +126,7 @@ html, body {
 .search-suggestions-title{
      margin-bottom: 15px;
      font-size: 32px;
+     color: #212121;
 }
 
 

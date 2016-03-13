@@ -627,8 +627,8 @@ var Splash = React.createClass({
                 <div className="splash-container">
                     <div id="" className="horizontal-middle splash-content">
                         <div className="splash-title">
-                            <h2>Hi there </h2>
-                            <h2>The time is currently {this.state.dateString} in Victoria</h2>
+                            <h2>Hi there, welcome to <b>Live Victoria</b> </h2>
+                            <h2>The time is currently {this.state.dateString}</h2>
                         </div>
                         <div className="">
                             <button type="button" onClick={this.handleButtonClick} className="btn btn-default btn-large splash-button" aria-label="Left Align">
