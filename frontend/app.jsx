@@ -1,47 +1,40 @@
-google.maps.LatLng.prototype.distanceFrom = function(latlng) {
-  var lat = [this.lat(), latlng.lat]
-  var lng = [this.lng(), latlng.lng]
-  var R = 6378137;
-  var dLat = (lat[1]-lat[0]) * Math.PI / 180;
-  var dLng = (lng[1]-lng[0]) * Math.PI / 180;
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-  Math.cos(lat[0] * Math.PI / 180 ) * Math.cos(lat[1] * Math.PI / 180 ) *
-  Math.sin(dLng/2) * Math.sin(dLng/2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  var d = R * c;
-  return Math.round(d);
-}
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 var Restaurants = [
     {
         name: "Original Joes",
         location: ["1654 McKenzie Avenue, Victoria, BC V8N 0A3"],
         type: "western",
-        budget: 15
+        budget: 15,
+        phone: "(778) 265-5225"
     },
     {
         name: "1550s",
         location: ["1550 Cedar Hill X Rd, Victoria, BC V8P 2P4"],
         type: "western",
-        budget: 15
+        budget: 15,
+        phone: "(250) 472-0047"
     },
     {
         name: "White Spot",
         location: ["3965 Quadra St, Victoria, BC V8X 1J8"],
         type: "western",
-        budget: 12
+        budget: 12,
+        phone: "(250) 727-3931"
     },
     {
         name: "Boston Pizza",
         location: ["797 Hillside Ave #10, Victoria, BC V8T 1Z5"],
         type: "western",
-        budget: 12
+        budget: 12,
+        phone: "(250) 721-3221"
     },
     {
         name: "Phonomenal",
         location: ["Suite 129, 3749 Shelbourne St, Victoria, BC V8P 5N4"],
         type: ["asian", "vietnamese"],
-        budget: 10
+        budget: 10,
+        phone: "(778) 430-5688"
     },
     {
         name: "East Garden Restaurant(东篱江湖菜)",
@@ -54,7 +47,8 @@ var Restaurants = [
         name: "Sun Wah Chinese Restaurant",
         location:"1515 Cook St, Victoria, BC V8T 5E5",
         type: ["asian", "chinese"],
-        budget: 14
+        budget: 14,
+        phone: "(250) 381-8966"
     },
     {
         name: "McRae's Restaurant Ltd",
@@ -67,19 +61,22 @@ var Restaurants = [
         name: "the DOCKS",
         location: "1208 Wharf St, Victoria, BC V8W 1T9",
         type: ["western"],
-        budget: 25
+        budget: 25,
+        phone: "(250) 360-1808"
     },
     {
         name: "Earls Kitchen + Bar",
         location: "The Bay Centre, 1199 Government St, Victoria, BC V8W 3M9",
         type: ["western"],
-        budget: 25
+        budget: 25,
+        phone: "(250) 381-1866"
     },
     {
         name: "10 Acres Bistro",
         location: "611 Courtney St, Victoria, BC V8W 1W8",
         type: ["western"],
-        budget: 15
+        budget: 15,
+        phone: "(250) 220-8008"
     },
     {
         name: "Ocean Island Café Lounge",
@@ -92,20 +89,91 @@ var Restaurants = [
         name: "Marina Restaurant",
         location: "1327 Beach Dr, Victoria, BC V8S 2N4",
         type: ["western"],
-        budget: 14,
+        budget: 25,
         phone: "(250) 598-8555"
     },
     {
-        name: "",
-        location: "",
-        type: ["asian"],
-        budget: 14
+        name: "II Terrazzo Ristorante",
+        location: "555 Johnson St, Victoria, BC V8W 1M2",
+        type: ["italian"],
+        budget: 25,
+        phone: "(250) 361-0028"
     },
     {
-        name: "",
-        location: "",
-        type: ["asian"],
-        budget: 14
+        name: "Dragon Gate Restaurant",
+        location: "1609 Fort St, Victoria, BC V8R 1H8",
+        type: ["asian", "chinese"],
+        budget: 20,
+        phone: "(250) 592-1178"
+    },
+    {
+        name: "Baan Thai Restaurant",
+        location: "1117 Blanshard St, Victoria, BC V8W 2H7",
+        type: ["asian", "thai"],
+        budget: 14,
+        phone: "(250) 383-0050"
+    },
+    {
+        name: "Little Thai Place",
+        location: "1839 Cook St, Victoria, BC V8T 3P5",
+        type: ["thai"],
+        budget: 20,
+        phone: "(250) 477-8900"
+    },
+    {
+        name: "Varsha Indian Kitchen",
+        location: "1600 Government Street, Victoria, BC V8W 1Z3",
+        type: ["indian"],
+        budget: 16,
+        phone: "(250) 590-6252"
+    },
+    {
+        name: "Masala Bites",
+        location: "1015 Fort Street, Victoria, BC V8V 3Z9",
+        type: ["indian"],
+        budget: 16
+    },
+    {
+        name: "The Bengal Lounge",
+        location: "721 Government St, Victoria, BC V8W 1W5",
+        type: ["indian"],
+        budget: 18,
+        phone: "(250) 389-2727"
+    },
+    {
+        name: "Sen Zushi",
+        location: "940 Fort St, Victoria, BC V8V 3K2",
+        type: ["japanese"],
+        budget: 8,
+        phone: "(250) 385-4320"
+    },
+    {
+        name: "Futaba Japanese Restaurant",
+        location: "1420 Quadra Street #101, Victoria, BC V8W 2L1",
+        type: ["japanese"],
+        budget: 14,
+        phone: "(250) 381-6141"
+    },
+    {
+        name: "Umi Sushi Express",
+        location: "The Bay Centre, 110 Victoria Eaton Ctr, Victoria, BC V8W 3M9",
+        type: ["japanese"],
+        budget: 8,
+        phone: "(250) 383-3887"
+    },
+    {
+        name: "Sakura Japanese Sushi & Restaurant",
+        location: "1213 Quadra St, Victoria, BC V8W 2K6",
+        type: ["japanese"],
+        budget: 14,
+        phone: "(250) 388-3636"
+    },
+    {
+        name: "The Bengal Lounge",
+        location: "721 Government St, Victoria, BC V8W 1W5",
+        type: ["indian"],
+        budget: 18,
+        phone: "(250) 389-2727"
     }
 ];
 
@@ -433,6 +501,21 @@ var ResultView = React.createClass({
    },
    componentWillMount: function() {
        
+       google.maps.LatLng.prototype.distanceFrom = function(latlng) {
+        var lat = [this.lat(), latlng.lat]
+        var lng = [this.lng(), latlng.lng]
+        var R = 6378137;
+        var dLat = (lat[1]-lat[0]) * Math.PI / 180;
+        var dLng = (lng[1]-lng[0]) * Math.PI / 180;
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat[0] * Math.PI / 180 ) * Math.cos(lat[1] * Math.PI / 180 ) *
+        Math.sin(dLng/2) * Math.sin(dLng/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c;
+        return Math.round(d);
+        }
+       
+       
        var that = this;
        
         if(navigator.geolocation !== undefined) {
@@ -440,7 +523,7 @@ var ResultView = React.createClass({
                 
     			that.setState({position: position});
     		});
-        }  
+        }
    },
    componentDidMount: function() {
        
@@ -541,16 +624,16 @@ var Splash = React.createClass({
     render: function() {
         return (
             <div id="splash-page" className="full-size">
-                <div className="full-size">
-                    <div id="splash-content" className="horizontal-middle full-size">
+                <div className="splash-container">
+                    <div id="" className="horizontal-middle splash-content">
                         <div className="splash-title">
                             <h2>Hi there </h2>
                             <h2>The time is currently {this.state.dateString} in Victoria</h2>
                         </div>
-                        <div className="full-size">
+                        <div className="">
                             <button type="button" onClick={this.handleButtonClick} className="btn btn-default btn-large splash-button" aria-label="Left Align">
                                 <span className="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                What would you like to do ?
+                                What would you like to do?
                             </button>
                         </div>
                     </div>
@@ -699,11 +782,17 @@ var EatContext = React.createClass({
         return (
             <div className="full-size">
       
-            { this.state.answers.map(function(val, i) {
+            { 
+                <ReactCSSTransitionGroup transitionName="fadein" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
+        
+                { this.state.answers.map(function(val, i) {
                 
                    return <SearchPrompt key={i} promptType={val.text} promptValue={val.value}/>
      
-                }.bind(this))
+                }.bind(this)) }
+                
+                </ReactCSSTransitionGroup>
+                
             }
             
             <If test={this.state.foodType===undefined || this.state.budget === undefined}>
@@ -868,12 +957,15 @@ var PlayContext = React.createClass({
         return (            
             <div className="full-size">
       
-            { this.state.answers.map(function(val, i) {
+            <ReactCSSTransitionGroup transitionName="fadein" transitionAppear={true} transitionEnterTimeout={500} transitionLeaveTimeout={300}>
+            { 
+                this.state.answers.map(function(val, i) {
                 
                    return <SearchPrompt key={i} promptType={val.text} promptValue={val.value}/>
      
                 }.bind(this))
             }
+            </ReactCSSTransitionGroup>
             
             <If test={this.state.playType===undefined}>
                 { this.state.playType === undefined ?
@@ -960,12 +1052,14 @@ var WatchContext = React.createClass({
         return (
             <div className="full-size">
       
+            <ReactCSSTransitionGroup transitionName="fadein" transitionAppear={true} transitionEnterTimeout={500} transitionLeaveTimeout={300}>
             { this.state.answers.map(function(val, i) {
                 
                    return <SearchPrompt key={i} promptType={val.text} promptValue={val.value}/>
      
                 }.bind(this))
             }
+            </ReactCSSTransitionGroup>
             
             <If test={this.state.watchType===undefined}>
                     <SearchPrompt promptType="What's your viewing pleasure?" promptFunctor={this.setWatchType}/>
@@ -1041,12 +1135,14 @@ var DrinkContext = React.createClass({
         return (
             <div className="full-size">
       
+            <ReactCSSTransitionGroup transitionName="fadein" transitionAppear={true} transitionEnterTimeout={500} transitionLeaveTimeout={300}>
             { this.state.answers.map(function(val, i) {
                 
                    return <SearchPrompt key={i} promptType={val.text} promptValue={val.value}/>
      
                 }.bind(this))
             }
+            </ReactCSSTransitionGroup>
             
             <If test={this.state.drinkType===undefined}>
                     <SearchPrompt promptType="What's your preferred atmosphere?" promptFunctor={this.setDrinkType}/>
@@ -1090,12 +1186,14 @@ var SingContext = React.createClass({
         return (
             <div className="full-size">
       
+            <ReactCSSTransitionGroup transitionName="fadein" transitionAppear={true} transitionEnterTimeout={500} transitionLeaveTimeout={300}>
             { this.state.answers.map(function(val, i) {
                 
                    return <SearchPrompt key={i} promptType={val.text} promptValue={val.value}/>
      
                 }.bind(this))
             }
+            </ReactCSSTransitionGroup>
             
             <If test={this.state.results!==undefined}>
                 <ResultView data={this.state.results}/>
@@ -1194,7 +1292,9 @@ var SearchPage = React.createClass({
                                     </div> : false;
         
         return (
-            <div id="search-page" className="full-size">
+            <ReactCSSTransitionGroup transitionName="fadein" transitionAppear={true} transitionEnterTimeout={500} transitionLeaveTimeout={300}>
+        
+            <div id="search-page" className="full-size" key={1}>
                 <div id="search-wrapper" className="full-size">
                     <div className="btn btn-default cancel-search"><span className="glyphicon glyphicon-remove-circle" onClick={this.resetContext}></span></div>
                     <div className="inner-middle full-size">
@@ -1208,6 +1308,7 @@ var SearchPage = React.createClass({
                                     </div>
                                 </div>
                                 :
+                                <ReactCSSTransitionGroup transitionName="fadein" transitionAppear={true} transitionEnterTimeout={500} transitionLeaveTimeout={300}>
                                 <div className="search-prompt-container full-size">
                                     <div className="search-box">
                                         <div className="search-title">
@@ -1216,6 +1317,7 @@ var SearchPage = React.createClass({
                                      </div>
                                      { React.createElement(this.state.context, {updateSuggestions: this.updateSuggestions}) }
                                 </div>
+                                </ReactCSSTransitionGroup>
                             }
                             
                             <If test={ this.state.suggestions.length }>
@@ -1238,6 +1340,9 @@ var SearchPage = React.createClass({
                     </div>
                 </div>
             </div>    
+                
+            </ReactCSSTransitionGroup>
+            
         )
     }
 });

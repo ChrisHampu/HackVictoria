@@ -29,6 +29,17 @@ html, body {
 }
 
 
+.splash-container {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+.splash-content {
+    display: table-cell;
+    vertical-align: middle;
+}
+
 .inner-middle {
 }
 
@@ -123,7 +134,7 @@ html, body {
 }
 
 .suggestion-button {
-    padding: 8px 0;
+    padding: 8px 0 !important;
     width: 50%;
     font-size: 18px;
     border: 1px solid black;
@@ -222,4 +233,30 @@ label[for="phonenumber"] {
 
 .card-container::-webkit-scrollbar { 
     display: none; 
+}
+
+.fadein-enter {
+  opacity: 0.01;
+}
+
+.fadein-enter.fadein-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.fadein-leave {
+  opacity: 1;
+}
+
+.fadein-leave.fadein-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+.fadein-appear {
+  opacity: 0.01;
+}
+
+.fadein-appear.fadein-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
 }
