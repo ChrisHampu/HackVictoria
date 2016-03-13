@@ -131,13 +131,6 @@ html, body {
     background: #EEE;
 }
 
-.card-container {
-    
-
-   
-    
-}
-
 .result-card {
    
     display: block;
@@ -174,4 +167,21 @@ html, body {
 .no-result{
     font-size: 20px;
     color: red;
+}
+
+.cancel-search {
+    opacity: 0.5;
+    font-size: 2.4em;
+    margin: 25px 0 0 25px;
+    border-radius: 50%;
+    padding: 10px 12px 2px 12px;
+}
+
+.cancel-search:hover {
+    opacity: 1;   
+}
+
+.type-inline {
+    display: inline;
+    margin-right: 6px;
 }

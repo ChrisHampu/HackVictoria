@@ -11,57 +11,141 @@ var Restaurants = [
         type: "western",
         budget: 15
     },
-    
     {
         name: "White Spot",
         location: ["3965 Quadra St, Victoria, BC V8X 1J8"],
         type: "western",
         budget: 12
     },
-    
     {
         name: "Boston Pizza",
         location: ["797 Hillside Ave #10, Victoria, BC V8T 1Z5"],
         type: "western",
         budget: 12
     },
-    
-    
     {
         name: "Phonomenal",
         location: ["Suite 129, 3749 Shelbourne St, Victoria, BC V8P 5N4"],
-        type: "asian",
+        type: ["asian", "vietnamese"],
         budget: 10
     },
-    
     {
         name: "East Garden Restaurant(东篱江湖菜)",
         location:"2888 Belmont Ave",
-        type: "asian",
+        type: ["asian", "chinese"],
         budget: 14
         
     },
-    
     {
         name: "Sun Wah Chinese Restaurant",
         location:"1515 Cook St, Victoria, BC V8T 5E5",
-        type: "asian",
+        type: ["asian", "chinese"],
         budget: 14
     },
-    
     {
         name: "Sun Wah Chinese Restaurant",
         location:"1515 Cook St, Victoria, BC V8T 5E5",
-        type: "asian",
+        type: ["asian", "chinese"],
         budget: 14
 
     }
-    
-    
-    
-    
 ];
 
+var WatchData = [
+    {
+        name: "Belfry Theatre",
+        location: "1291 Gladstone Ave, Victoria, BC V8T 1G5",
+        type: "plays"
+    },
+    {
+        name: "Theatre Inconnu",
+        location: "1923 Fernwood Rd, Victoria, BC V8T 2Y6",
+        type: "plays"
+    },
+    {
+        name: "Cineplex Odeon Victoria Cinemas",
+        location: "780 Yates St, Victoria, BC V8W 1L4",
+        type: "cineplex"
+    },
+    {
+        name: "Vic Theatre",
+        location: "808 Douglas St, Victoria, BC V8W 2B6",
+        type: "indie movies"
+    },
+    {
+        name: "IMAX Victoria",
+        location: "675 Belleville St, Victoria, BC V8W 1A1",
+        type: "imax"
+    }
+];
+
+var DrinkData = [
+    {
+        name: "Darcy's Pub",
+        location: "1127 Wharf St, Victoria, BC V8W 1T4",
+        type: "pubs"
+    },
+    {
+        name: "Yates Street Taphouse - Pub",
+        location: "759 Yates St, Victoria, BC V8W 1L6",
+        type: "pubs"     
+    },
+        {
+        name: "Swans Brewpub",
+        location: "1601 Store St, Victoria, BC V8W 1N6",
+        type: "pubs"     
+    },
+    {
+        name: "Bard & Banker",
+        location: "1022 Government St, Victoria, BC V8W 1X7",
+        type: "pubs"     
+    },
+    {
+        name: "Lucky Bar",
+        location: "517 Yates St, Victoria, BC V8W 1K7",
+        type: "bars"     
+    },
+    {
+        name: "Tapa Bar",
+        location: "620 Trounce Alley, Victoria, BC V8W 1K3",
+        type: "bars"     
+    },
+    {
+        name: "Vista 18 Westcoast Grill & Wine Bar",
+        location: "740 Burdett Ave, Victoria, BC V8W 1B2",
+        type: "bars"     
+    },
+    {
+        name: "Paparazzi Nightclub",
+        location: "642 Johnson St, Victoria, BC V8W 1M6",
+        type: "clubs"     
+    },
+    {
+        name: "Sugar Nightclub",
+        location: "858 Yates St, Victoria, BC V8W 1L8",
+        type: "clubs"     
+    },
+    {
+        name: "DéjàVous Nightclub & Lounge",
+        location: "751 View St, Victoria, BC V8W",
+        type: "clubs"     
+    }
+];
+
+var SingData = [
+    {
+        name: "Victoria Karaoke Lotteriacafe",
+        location: "648 Yates St, Victoria, BC V8W 1L3",
+        type: "karaoke"     
+    },
+    {
+        name: "Primetime Sound DJ & Karaoke",
+        location: "70 Pilot St, Victoria, BC V8V 2A4",
+        type: "karaoke"     
+    },
+];
+
+// Games at peacocks billiards
 
 var Expected_food_input = ["chinese", "indian", "asian", "thai", "japanese", 
                             "western", "italian", "greek", "malaysian"]
@@ -69,6 +153,16 @@ var Expected_food_input = ["chinese", "indian", "asian", "thai", "japanese",
 var Expected_budget_input = ['$5', '$10', '$15', '$20', '$25'];                           
 
 var Expected_context_input = ['eat', 'play', 'sing', 'drink', 'watch'];
+
+var Expected_play_input = ['sports', 'games'];
+
+var Expected_game_input = ['board games', 'table games'];
+
+var Expected_sports_input= ['tennis', 'hockey', 'skating']
+
+var Expected_watch_input = ['plays', 'cineplex', 'imax', 'indie movies'];
+
+var Expected_drink_input = ['club', 'pubs', 'bars'];
 
 // global
 var If = React.createClass({
@@ -89,10 +183,20 @@ var Result = React.createClass({
        
        <div className="col-md-4">
             <div className="result-card">
-                <div id= "restaurant-name">{this.props.data.name}</div>
-                <div id= "restaurant-type">{this.props.data.type} Cuisine</div>
+                <div id="restaurant-name">{this.props.data.name}</div>
+                { typeof this.props.data.type === "array" || typeof this.props.data.type === "object"? 
+                    this.props.data.type.map(function(type, i) {
+                
+                        return <li key={i} id="restaurant-type" className="type-inline">{type}</li>
+     
+                    })
+                    :
+                    <div id="restaurant-type">{this.props.data.type}</div>
+                }
                 <div>{this.props.data.location}</div>
-                <div>${this.props.data.budget} Budget</div>
+                <If test={this.props.data.budget !== undefined}>
+                    <div>${this.props.data.budget} Budget</div>
+                </If>
             </div>
         </div>
     )
@@ -106,10 +210,9 @@ var ResultView = React.createClass({
          mapHeight: undefined
      }  
    },
-   componentWillMount: function() {
-
-   },
    componentDidMount: function() {
+       
+       this.infoWindow = new google.maps.InfoWindow();
        
        this.updateMapHeight(); 
        
@@ -123,7 +226,15 @@ var ResultView = React.createClass({
         window.addEventListener('resize', this.updateMapHeight);
         
         for(var i = 0; i < this.props.data.length; i++) {
-            this.addGeocodedMarker(this.props.data[i].location[0]);
+            
+            if(typeof this.props.data.type === "array" || typeof this.props.data.type === "object") {
+                
+                for(var x = 0; x < this.props.data[i].location.length; x++) {
+                    this.addGeocodedMarker(this.props.data[i].location[i]);
+                }
+            }
+            else
+                this.addGeocodedMarker(this.props.data[i].location, this.props.data[i].name);
         }
 
    },
@@ -145,11 +256,12 @@ var ResultView = React.createClass({
         
         this.setState({mapHeight: this.offsetTop});
    },
-  addGeocodedMarker: function(address) {
+  addGeocodedMarker: function(address, name) {
       
       var geocoder = new google.maps.Geocoder();
       var that = this;
       
+      console.log(address);
       
         geocoder.geocode({'address': address}, function(results, status) {
             
@@ -161,6 +273,16 @@ var ResultView = React.createClass({
                     map: that.map,
                     position: results[0].geometry.location
                 });
+                
+                marker.addListener('click', function() {
+                    that.map.setZoom(16);
+                    that.map.setCenter(marker.getPosition());
+                 });
+                 
+                 google.maps.event.addListener(marker, 'click', function() {
+                    that.infoWindow.setContent("<div><h3>" + name + "</h3></div><h4>" + address + "</h4>");
+                    that.infoWindow.open(that.map, marker);
+                  });
             } else {
                 console.log(status);
             }
@@ -257,6 +379,11 @@ var SearchPrompt = React.createClass({
        return {
            value: undefined
        }
+    },
+    componentDidMount: function() {
+        
+        if(this.refs.searchinput !== undefined)
+            this.refs.searchinput.focus();
     },
     handleOnKey: function(ev) {
             //ENTER KEY
@@ -356,10 +483,27 @@ var EatContext = React.createClass({
         
         for(var i = 0; i < Restaurants.length; i++) {
             
-            if(this.state.foodType.toLowerCase() === Restaurants[i].type.toLowerCase() && 
-                this.state.budget <= Restaurants[i].budget) {
+            console.log(typeof Restaurants[i].type);
+            if(typeof Restaurants[i].type === "array" || typeof Restaurants[i].type === "object") {
+                
+                if(this.state.budget < Restaurants[i].budget)
+                    continue;
+                
+                for(var x = 0; x < Restaurants[i].type.length; x++) {
                     
-                res.push(Restaurants[i]);
+                   if(this.state.foodType.toLowerCase() === Restaurants[i].type[x].toLowerCase()) {
+                    
+                        res.push(Restaurants[i]);
+                        break;   
+                   }
+                }
+            }
+            else {
+                if(this.state.foodType.toLowerCase() === Restaurants[i].type.toLowerCase() && 
+                    this.state.budget >= Restaurants[i].budget) {
+                        
+                    res.push(Restaurants[i]);
+                }
             }
         }
         
@@ -401,29 +545,366 @@ var EatContext = React.createClass({
 
 var PlayContext = React.createClass({
     
+    getInitialState: function() {
+        
+         return {
+            playType: undefined,
+            sportType: undefined,
+            gameType: undefined,
+            answers: [],
+            results: undefined,
+            errorMsg: undefined
+        }  
+        
+    },
+    
+    componentWillMount: function() {
+        
+        this.props.updateSuggestions(Expected_play_input, this.setPlayType);
+    },
+    setPlayType: function(prompt, nuValue) {
+       
+        var found = false;
+       
+        for(var i=0; i<Expected_play_input.length; i++){
+            
+            //if the input is not equal
+              if (nuValue == Expected_play_input[i]) {
+                    found = true;
+                    break;
+              }
+        }
+        
+        if(found) {
+            
+            this.state.answers.push({text:"I'm looking for", value: nuValue});
+            
+            this.setState({playType: nuValue, errorMsg: undefined});
+            
+            if(nuValue === "games") {
+                this.props.updateSuggestions(Expected_game_input, this.setGameType);
+            } else {
+                this.props.updateSuggestions(Expected_sports_input, this.setSportType);
+            }
+        } 
+        
+        else {
+            this.setState({errorMsg: "Failed to find " + nuValue + " in the games database"});
+        }
+    },
+    
+    setGameType: function(prompt, nuValue) {
+        
+        var found = false;
+       
+        for(var i=0; i<Expected_game_input.length; i++){
+            
+            //if the input is not equal
+              if (nuValue == Expected_game_input[i]) {
+                    found = true;
+                    break;
+              }
+        }
+        
+        if(found) {
+            
+            this.state.answers.push({text:"I enjoy playing", value: nuValue});
+            
+            this.setState({gameType: nuValue, errorMsg: undefined}, function() {
+                
+                this.gatherData();
+                this.props.updateSuggestions([]);
+            });
+            
+            
+        } 
+        
+        else {
+            this.setState({errorMsg: "Failed to find " + nuValue + " in the games database"});
+        }
+    },
+    
+    setSportType: function(prompt, nuValue) {
+        
+        var found = false;
+       
+        for(var i=0; i<Expected_sports_input.length; i++){
+            
+            //if the input is not equal
+              if (nuValue == Expected_sports_input[i]) {
+                    found = true;
+                    break;
+              }
+        }
+        
+        if(found) {
+            
+            this.state.answers.push({text: nuValue==="skating" ? "I enjoy" : "I enjoy playing", value: nuValue});
+            
+            this.setState({sportType: nuValue, errorMsg: undefined}, function() {
+                
+                this.gatherData();
+                this.props.updateSuggestions([]);
+            });
+            
+            
+        } 
+        
+        else {
+            this.setState({errorMsg: "Failed to find " + nuValue + " in the games database"});
+        }
+    },
+    
+    gatherData: function() {
+        
+    },
     render: function() {
-        return (<div></div>)
+        
+        console.log(this.state.answers);
+        
+        return (            
+            <div className="full-size">
+      
+            { this.state.answers.map(function(val, i) {
+                
+                   return <SearchPrompt key={i} promptType={val.text} promptValue={val.value}/>
+     
+                }.bind(this))
+            }
+            
+            <If test={this.state.playType===undefined}>
+                { this.state.playType === undefined ?
+                    <SearchPrompt promptType="What do you want to play?" promptFunctor={this.setPlayType}/>
+                    : (this.state.gameType !== undefined ? 
+                    <SearchPrompt promptType="What games do you like?" promptFunctor={this.setGameType}/>
+                    : <SearchPrompt promptType="What sports do you like?" promptFunctor={this.setSportType}/>)
+                }
+            </If>
+            
+            <If test={this.state.playType!==undefined}>
+                { this.state.playType === "games" ?
+                    <SearchPrompt promptType="What games do you like?" promptFunctor={this.setGameType}/>
+                    :  <SearchPrompt promptType="What sports do you like?" promptFunctor={this.setSportType}/>
+                }
+            </If>
+            
+            <If test={this.state.results!==undefined}>
+                <ResultView data={this.state.results}/>
+            </If>
+           
+            <If test={this.state.errorMsg !== undefined}>
+                <div className="sorry-Message">{this.state.errorMsg}</div>
+            </If>
+           
+            </div>
+        )
     }
 })
 
 var WatchContext = React.createClass({
-    
+    getInitialState: function() {
+      
+        return {
+            watchType: undefined,
+            answers: [],
+            results: undefined,
+            errorMsg: undefined
+        }  
+    },
+    componentWillMount: function() {
+        
+        this.props.updateSuggestions(Expected_watch_input, this.setWatchType);
+    },
+    setWatchType: function(prompt, newValue) {
+        var found = false;
+       
+        for(var i=0; i<Expected_watch_input.length; i++){
+            
+            //if the input is not equal
+              if (newValue == Expected_watch_input[i]) {
+                    found = true;
+                    break;
+              }
+        }
+        
+        if(found) {
+            
+            this.state.answers.push({text:"I'm watching ", value: newValue});
+            this.setState({watchType: newValue, errorMsg: undefined}, function() {
+                this.gatherData();
+                this.props.updateSuggestions([]);
+            });
+            
+        } else {
+            
+            this.setState({errorMsg: "Failed to find " + nuValue + " viewings in database"});
+        }
+    },
+    gatherData: function() {
+        
+        var res = [];
+        
+        for(var i = 0; i < WatchData.length; i++) {
+            
+            if(this.state.watchType.toLowerCase() === WatchData[i].type.toLowerCase()) {
+                    
+                res.push(WatchData[i]);
+            }
+        }
+        
+        this.setState({results: res});
+    },
     render: function() {
-        return (<div></div>)
+        return (
+            <div className="full-size">
+      
+            { this.state.answers.map(function(val, i) {
+                
+                   return <SearchPrompt key={i} promptType={val.text} promptValue={val.value}/>
+     
+                }.bind(this))
+            }
+            
+            <If test={this.state.watchType===undefined}>
+                    <SearchPrompt promptType="What's your viewing pleasure?" promptFunctor={this.setWatchType}/>
+            </If>
+            
+            <If test={this.state.results!==undefined}>
+                <ResultView data={this.state.results}/>
+            </If>
+           
+            <If test={this.state.errorMsg !== undefined}>
+                <div className="sorry-Message">{this.state.errorMsg}</div>
+            </If>
+           
+            </div>
+        )
     }
 })
 
 var DrinkContext = React.createClass({
-    
+   getInitialState: function() {
+      
+        return {
+            drinkType: undefined,
+            answers: [],
+            results: undefined,
+            errorMsg: undefined
+        }  
+    },
+    componentWillMount: function() {
+        
+        this.props.updateSuggestions(Expected_drink_input, this.setDrinkType);
+    },
+    setDrinkType: function(prompt, newValue) {
+        var found = false;
+       
+        for(var i=0; i<Expected_drink_input.length; i++){
+            
+            //if the input is not equal
+              if (newValue == Expected_drink_input[i]) {
+                    found = true;
+                    break;
+              }
+        }
+        
+        if(found) {
+            
+            this.state.answers.push({text:"I'm drinking at ", value: newValue});
+            this.setState({drinkType: newValue, errorMsg: undefined}, function() {
+                this.gatherData();
+                this.props.updateSuggestions([]);
+            });
+            
+        } else {
+            
+            this.setState({errorMsg: "Failed to find " + nuValue + " in drinks database"});
+        }
+    },
+    gatherData: function() {
+        
+        var res = [];
+        
+        for(var i = 0; i < DrinkData.length; i++) {
+            
+            if(this.state.drinkType.toLowerCase() === DrinkData[i].type.toLowerCase()) {
+                    
+                res.push(DrinkData[i]);
+            }
+        }
+        
+        this.setState({results: res});
+    },
     render: function() {
-        return (<div></div>)
+        return (
+            <div className="full-size">
+      
+            { this.state.answers.map(function(val, i) {
+                
+                   return <SearchPrompt key={i} promptType={val.text} promptValue={val.value}/>
+     
+                }.bind(this))
+            }
+            
+            <If test={this.state.drinkType===undefined}>
+                    <SearchPrompt promptType="What's your preferred atmosphere?" promptFunctor={this.setDrinkType}/>
+            </If>
+            
+            <If test={this.state.results!==undefined}>
+                <ResultView data={this.state.results}/>
+            </If>
+           
+            <If test={this.state.errorMsg !== undefined}>
+                <div className="sorry-Message">{this.state.errorMsg}</div>
+            </If>
+           
+            </div>
+        )
     }
 })
 
 var SingContext = React.createClass({
-    
+  getInitialState: function() {
+      
+        return {
+            answers: [],
+            results: undefined,
+            errorMsg: undefined
+        }  
+    },
+    componentWillMount: function() {
+        
+        this.props.updateSuggestions([]);
+        
+        this.state.answers.push({text:"I'm singing at ", value: ""});
+        
+        this.gatherData();
+    },
+    gatherData: function() {
+        
+        this.setState({results: SingData});
+    },
     render: function() {
-        return (<div></div>)
+        return (
+            <div className="full-size">
+      
+            { this.state.answers.map(function(val, i) {
+                
+                   return <SearchPrompt key={i} promptType={val.text} promptValue={val.value}/>
+     
+                }.bind(this))
+            }
+            
+            <If test={this.state.results!==undefined}>
+                <ResultView data={this.state.results}/>
+            </If>
+           
+            <If test={this.state.errorMsg !== undefined}>
+                <div className="sorry-Message">{this.state.errorMsg}</div>
+            </If>
+           
+            </div>
+        )
     }
 })
 
@@ -502,8 +983,7 @@ var SearchPage = React.createClass({
         
         this.updateSuggestions(Expected_context_input, this.setContext);
         
-        console.log('removing');
-        this.setState({context: undefined, contextString: undefined, errorMsg: ""}, function() { console.log('remove');});
+        this.setState({context: undefined, contextString: undefined, errorMsg: ""});
     },
     render: function() {
         
