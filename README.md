@@ -11,3 +11,5 @@ with ReactJS since the NWHacks 2016 hackathon which was 2 weeks ago.
 
 Aman however is fresh to web development, and contributed mainly to UI design & user interaction, but is proud to have learned a lot
 about how javascript works and especially react.
+
+PS We are both looking for co-op opportunities :)
